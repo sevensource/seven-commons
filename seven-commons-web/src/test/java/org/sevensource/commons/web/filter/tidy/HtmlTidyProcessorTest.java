@@ -1,0 +1,127 @@
+package org.sevensource.commons.web.filter.tidy;
+
+import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.junit.Assert.assertThat;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.EnumSet;
+import java.util.HashSet;
+
+import org.apache.commons.io.IOUtils;
+import org.junit.Test;
+import org.sevensource.commons.web.RegexMatcher;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorFormatter;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOptions;
+import org.xmlunit.matchers.HasXPathMatcher;
+
+public class HtmlTidyProcessorTest {
+	
+	private final static String SIMPLE_TEST_FILE = "src/test/resources/tidy_test_simple.html";
+	private final static String STYLE_TEST_FILE = "src/test/resources/tidy_test_style.html";
+	private final static String SCRIPT_TEST_FILE = "src/test/resources/tidy_test_script.html";
+
+	@Test
+	public void processor_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(new HashSet<>(), TidyProcessorFormatter.NONE);
+		InputStream is = new FileInputStream(SIMPLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		boolean result = IOUtils.contentEquals(processed, new FileInputStream(SIMPLE_TEST_FILE));
+		
+		assertThat(result, is(true));
+	}
+	
+	@Test
+	public void compact_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(new HashSet<>(), TidyProcessorFormatter.COMPACT);
+		InputStream is = new FileInputStream(SIMPLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+		
+		assertThat(result, containsString("<html><head></head>"));
+		assertThat(result, containsString("<div>test </div>"));
+	}
+	
+	@Test
+	public void format_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(new HashSet<>(), TidyProcessorFormatter.FORMAT);
+		InputStream is = new FileInputStream(SIMPLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+		
+		assertThat(result, RegexMatcher.matches("(?s)^<html>\\R\\s+<head>\\R\\s+</head>\\R\\s+<body>\\R\\s+<p>test</p>.*"));
+	}
+	
+	@Test
+	public void comment_removal_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.REMOVE_COMMENTS), TidyProcessorFormatter.NONE);
+		InputStream is = new FileInputStream(SIMPLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+		
+		assertThat(result, not(containsString("<!--")));
+	}
+	
+	@Test
+	public void style_relocation_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_STYLES_TO_HEAD), TidyProcessorFormatter.NONE);
+		InputStream is = new FileInputStream(STYLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+		
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/style[1]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/style[2]"));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/body/style[1]")));
+	}
+	
+	@Test
+	public void style_relocation_and_deduplication_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_STYLES_TO_HEAD, TidyProcessorOptions.REMOVE_DUPLICATE_STYLES), TidyProcessorFormatter.NONE);
+		InputStream is = new FileInputStream(STYLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+		
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/style[1]"));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/head/style[2]")));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/body/style[1]")));
+	}
+	
+	@Test
+	public void stylesheet_relocation_and_deduplication_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_STYLESHEETS, TidyProcessorOptions.REMOVE_DUPLICATE_STYLES), TidyProcessorFormatter.NONE);
+		InputStream is = new FileInputStream(STYLE_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/link[1]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/link[2]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/link[3]"));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/head/link[4]")));
+		
+		assertThat(result, HasXPathMatcher.hasXPath("/html/body/link[1]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/body/link[2]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/body/link[3]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/body/link[4]"));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/body/link[5]")));
+	}
+	
+	@Test
+	public void script_relocation_and_deduplication_works() throws IOException {
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_SCRIPTS, TidyProcessorOptions.REMOVE_DUPLICATE_SCRIPTS), TidyProcessorFormatter.NONE);
+		InputStream is = new FileInputStream(SCRIPT_TEST_FILE);
+		InputStream processed = p.process(is);
+		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
+
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/script[1]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/head/script[2]"));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/head/script[3]")));
+		
+		assertThat(result, HasXPathMatcher.hasXPath("/html/body/script[1]"));
+		assertThat(result, HasXPathMatcher.hasXPath("/html/body/script[2]"));
+		assertThat(result, not(HasXPathMatcher.hasXPath("/html/body/script[3]")));
+	}
+}
