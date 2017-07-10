@@ -2,6 +2,7 @@ package org.sevensource.commons.web.filter.tidy;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class HtmlTidyFilter extends AbstractContentChangingFilter {
-
+	
 	private static final Logger logger = LoggerFactory.getLogger(HtmlTidyFilter.class);
 	
 	public static final String OPTIONS_PARAMETER = "options";
@@ -68,6 +69,10 @@ public class HtmlTidyFilter extends AbstractContentChangingFilter {
 				o = o.trim();
 				if(o.length() > 0) {
 					try {
+						if("all".equalsIgnoreCase(o)) {
+							return EnumSet.allOf(TidyProcessorOptions.class);
+						}
+						
 						TidyProcessorOptions tpo = TidyProcessorOptions.valueOf(o);
 						options.add(tpo);
 					} catch(IllegalArgumentException e) {
