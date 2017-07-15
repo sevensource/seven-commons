@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOptions;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOption;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -15,10 +15,10 @@ class StyleRelocator extends RelocatorSupport {
 	private final boolean relocateLinkedStylesheet;
 	private final boolean removeDuplicates;
 	
-	StyleRelocator(Set<TidyProcessorOptions> processorOptions) {
-		this.relocateStyleToHead = processorOptions.contains(TidyProcessorOptions.RELOCATE_STYLES_TO_HEAD);
-		this.relocateLinkedStylesheet = processorOptions.contains(TidyProcessorOptions.RELOCATE_STYLESHEETS);
-		this.removeDuplicates = processorOptions.contains(TidyProcessorOptions.REMOVE_DUPLICATE_STYLES);
+	StyleRelocator(Set<TidyProcessorOption> processorOptions) {
+		this.relocateStyleToHead = processorOptions.contains(TidyProcessorOption.RELOCATE_STYLES_TO_HEAD);
+		this.relocateLinkedStylesheet = processorOptions.contains(TidyProcessorOption.RELOCATE_STYLESHEETS);
+		this.removeDuplicates = processorOptions.contains(TidyProcessorOption.REMOVE_DUPLICATE_STYLES);
 		
 	}
 

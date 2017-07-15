@@ -13,7 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.sevensource.commons.web.filter.AbstractContentChangingFilter;
 import org.sevensource.commons.web.filter.BufferingHttpResponseWrapper;
 import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorFormatter;
-import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOptions;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -36,7 +36,7 @@ public class HtmlTidyFilter extends AbstractContentChangingFilter {
 	public void init(FilterConfig filterConfig) throws ServletException {
 		super.init(filterConfig);
 		
-		final Set<TidyProcessorOptions> options = initOptions(filterConfig);
+		final Set<TidyProcessorOption> options = initOptions(filterConfig);
 		final TidyProcessorFormatter formatter = initFormatter(filterConfig);
 		
 		this.processor = new HtmlTidyProcessor(options, formatter);
@@ -59,8 +59,8 @@ public class HtmlTidyFilter extends AbstractContentChangingFilter {
 		}
 		return formatter;
 	}
-	private static Set<TidyProcessorOptions> initOptions(FilterConfig filterConfig) {
-		final Set<TidyProcessorOptions> options = new HashSet<>();
+	private static Set<TidyProcessorOption> initOptions(FilterConfig filterConfig) {
+		final Set<TidyProcessorOption> options = new HashSet<>();
 		
 		final String optionsParameter = filterConfig.getInitParameter(OPTIONS_PARAMETER);
 		if(optionsParameter != null) {
@@ -70,10 +70,10 @@ public class HtmlTidyFilter extends AbstractContentChangingFilter {
 				if(o.length() > 0) {
 					try {
 						if("all".equalsIgnoreCase(o)) {
-							return EnumSet.allOf(TidyProcessorOptions.class);
+							return EnumSet.allOf(TidyProcessorOption.class);
 						}
 						
-						TidyProcessorOptions tpo = TidyProcessorOptions.valueOf(o);
+						TidyProcessorOption tpo = TidyProcessorOption.valueOf(o);
 						options.add(tpo);
 					} catch(IllegalArgumentException e) {
 						logger.error("No TidyProcessorOption with name {}", o);

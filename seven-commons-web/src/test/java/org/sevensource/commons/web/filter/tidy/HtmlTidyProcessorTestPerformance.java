@@ -13,7 +13,7 @@ import java.util.Set;
 import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorFormatter;
-import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOptions;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOption;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class HtmlTidyProcessorTestPerformance {
 	
 	
 	private PerfResult performance(String file, TidyProcessorFormatter formatter) throws IOException {
-		Set<TidyProcessorOptions> options = EnumSet.allOf(TidyProcessorOptions.class);
+		Set<TidyProcessorOption> options = EnumSet.allOf(TidyProcessorOption.class);
 		
 		final HtmlTidyProcessor p = new HtmlTidyProcessor(options, formatter);
 

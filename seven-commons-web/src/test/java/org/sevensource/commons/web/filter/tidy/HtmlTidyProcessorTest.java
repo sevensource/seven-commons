@@ -16,7 +16,7 @@ import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 import org.sevensource.commons.web.RegexMatcher;
 import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorFormatter;
-import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOptions;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOption;
 import org.xmlunit.matchers.HasXPathMatcher;
 
 public class HtmlTidyProcessorTest {
@@ -58,7 +58,7 @@ public class HtmlTidyProcessorTest {
 	
 	@Test
 	public void comment_removal_works() throws IOException {
-		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.REMOVE_COMMENTS), TidyProcessorFormatter.NONE);
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOption.REMOVE_COMMENTS), TidyProcessorFormatter.NONE);
 		InputStream is = new FileInputStream(SIMPLE_TEST_FILE);
 		InputStream processed = p.process(is);
 		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
@@ -68,7 +68,7 @@ public class HtmlTidyProcessorTest {
 	
 	@Test
 	public void style_relocation_works() throws IOException {
-		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_STYLES_TO_HEAD), TidyProcessorFormatter.NONE);
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOption.RELOCATE_STYLES_TO_HEAD), TidyProcessorFormatter.NONE);
 		InputStream is = new FileInputStream(STYLE_TEST_FILE);
 		InputStream processed = p.process(is);
 		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
@@ -80,7 +80,7 @@ public class HtmlTidyProcessorTest {
 	
 	@Test
 	public void style_relocation_and_deduplication_works() throws IOException {
-		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_STYLES_TO_HEAD, TidyProcessorOptions.REMOVE_DUPLICATE_STYLES), TidyProcessorFormatter.NONE);
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOption.RELOCATE_STYLES_TO_HEAD, TidyProcessorOption.REMOVE_DUPLICATE_STYLES), TidyProcessorFormatter.NONE);
 		InputStream is = new FileInputStream(STYLE_TEST_FILE);
 		InputStream processed = p.process(is);
 		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
@@ -92,7 +92,7 @@ public class HtmlTidyProcessorTest {
 	
 	@Test
 	public void stylesheet_relocation_and_deduplication_works() throws IOException {
-		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_STYLESHEETS, TidyProcessorOptions.REMOVE_DUPLICATE_STYLES), TidyProcessorFormatter.NONE);
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOption.RELOCATE_STYLESHEETS, TidyProcessorOption.REMOVE_DUPLICATE_STYLES), TidyProcessorFormatter.NONE);
 		InputStream is = new FileInputStream(STYLE_TEST_FILE);
 		InputStream processed = p.process(is);
 		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);
@@ -111,7 +111,7 @@ public class HtmlTidyProcessorTest {
 	
 	@Test
 	public void script_relocation_and_deduplication_works() throws IOException {
-		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOptions.RELOCATE_SCRIPTS, TidyProcessorOptions.REMOVE_DUPLICATE_SCRIPTS), TidyProcessorFormatter.NONE);
+		HtmlTidyProcessor p = new HtmlTidyProcessor(EnumSet.of(TidyProcessorOption.RELOCATE_SCRIPTS, TidyProcessorOption.REMOVE_DUPLICATE_SCRIPTS), TidyProcessorFormatter.NONE);
 		InputStream is = new FileInputStream(SCRIPT_TEST_FILE);
 		InputStream processed = p.process(is);
 		String result = IOUtils.toString(processed, StandardCharsets.UTF_8);

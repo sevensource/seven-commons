@@ -37,7 +37,7 @@ import net.htmlparser.jericho.StartTagType;
  *   <li>Removes HTML comments
  *   <li>compacts or beautifies the resulting document
  *
- * @see TidyProcessorOptions
+ * @see TidyProcessorOption
  * @see TidyProcessorFormatter
  * 
  * @author pgaschuetz
@@ -48,7 +48,7 @@ public class HtmlTidyProcessor {
 	private static final Logger logger = LoggerFactory.getLogger(HtmlTidyProcessor.class);
 	
 
-	public enum TidyProcessorOptions {
+	public enum TidyProcessorOption {
 		REMOVE_COMMENTS,
 		RELOCATE_STYLES_TO_HEAD,
 		RELOCATE_STYLESHEETS,
@@ -61,7 +61,7 @@ public class HtmlTidyProcessor {
 		NONE, FORMAT, COMPACT;
 	}
 
-	private final Set<TidyProcessorOptions> processorOptions;
+	private final Set<TidyProcessorOption> processorOptions;
 	private final TidyProcessorFormatter processorFormatter;
 	
 	private final StyleRelocator styleRelocator;
@@ -72,7 +72,7 @@ public class HtmlTidyProcessor {
 		DummyMicrosoftStartTag.INSTANCE.register();
 	}
 	
-	public HtmlTidyProcessor(Set<TidyProcessorOptions> processorOptions, TidyProcessorFormatter processorFormatter) {
+	public HtmlTidyProcessor(Set<TidyProcessorOption> processorOptions, TidyProcessorFormatter processorFormatter) {
 		this.processorOptions = processorOptions;
 		this.processorFormatter = processorFormatter;
 		this.styleRelocator = new StyleRelocator(this.processorOptions);
@@ -89,25 +89,22 @@ public class HtmlTidyProcessor {
 		
 		final OutputDocument outputDocument = new OutputDocument(source);
 		
-		if (processorOptions.contains(TidyProcessorOptions.REMOVE_COMMENTS))
+		if (processorOptions.contains(TidyProcessorOption.REMOVE_COMMENTS))
 			removeComments(source, outputDocument);
 		
-		if (processorOptions.contains(TidyProcessorOptions.RELOCATE_STYLES_TO_HEAD) || 
-				processorOptions.contains(TidyProcessorOptions.RELOCATE_STYLESHEETS) ||
-				processorOptions.contains(TidyProcessorOptions.REMOVE_DUPLICATE_STYLES)) {
+		if (processorOptions.contains(TidyProcessorOption.RELOCATE_STYLES_TO_HEAD) || 
+				processorOptions.contains(TidyProcessorOption.RELOCATE_STYLESHEETS) ||
+				processorOptions.contains(TidyProcessorOption.REMOVE_DUPLICATE_STYLES)) {
 			styleRelocator.relocate(source, outputDocument);
 		}
 		
-		if (processorOptions.contains(TidyProcessorOptions.RELOCATE_SCRIPTS) ||
-				processorOptions.contains(TidyProcessorOptions.REMOVE_DUPLICATE_SCRIPTS)) {
+		if (processorOptions.contains(TidyProcessorOption.RELOCATE_SCRIPTS) ||
+				processorOptions.contains(TidyProcessorOption.REMOVE_DUPLICATE_SCRIPTS)) {
 			scriptRelocator.relocate(source, outputDocument);
 		}
 		
 
-		int bufferSize = source.getEnd() / 10;
-		if(bufferSize < 1) {
-			bufferSize = 1024 * 4;
-		}
+		final int bufferSize = Math.max(source.getEnd() / 10, 1024);
 		
 		final FastByteArrayOutputStream os = new FastByteArrayOutputStream(bufferSize);
 		final OutputStreamWriter writer = new OutputStreamWriter(os, StandardCharsets.UTF_8.name());
