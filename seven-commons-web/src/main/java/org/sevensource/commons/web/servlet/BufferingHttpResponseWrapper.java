@@ -1,4 +1,4 @@
-package org.sevensource.commons.web.filter;
+package org.sevensource.commons.web.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
