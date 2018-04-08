@@ -12,52 +12,51 @@
 	<description />
 
 	<parent>
-		<groupId>ch.seven-systems</groupId>
-		<artifactId>spring-boot-parent</artifactId>
-		<version>2.0.0.RC1</version>
+		<groupId>ch.sevensystems.parents</groupId>
+		<artifactId>sevensystems-build</artifactId>
+		<version>1.0</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
-
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
+		
+		<junit.version>4.12</junit.version>
+		<hamcrest.version>1.3</hamcrest.version>
 	</properties>
-
-	<repositories>
-		<repository>
-			<id>repo.seven-systems.ch</id>
-			<url>http://repo.seven-systems.ch/repository/maven-releases</url>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-		</repository>
-		<repository>
-			<id>repo.seven-systems.ch-snapshots</id>
-			<url>http://repo.seven-systems.ch/repository/maven-snapshots</url>
-			<snapshots>
-				<enabled>true</enabled>
-			</snapshots>
-			<releases>
-				<enabled>false</enabled>
-			</releases>
-		</repository>
-	</repositories>
-
-
+	
 	<modules>
 		<module>seven-commons-web</module>
 	</modules>
+
+	<repositories>
+	    <repository>
+	      <releases>
+	        <enabled>true</enabled>
+	      </releases>
+	      <snapshots>
+	        <enabled>false</enabled>
+	      </snapshots>
+	      <id>repo.seven-systems.ch</id>
+	      <url>http://repo.seven-systems.ch/repository/maven-releases</url>
+	    </repository>
+	    <repository>
+	      <releases>
+	        <enabled>false</enabled>
+	      </releases>
+	      <snapshots>
+	        <enabled>true</enabled>
+	      </snapshots>
+	      <id>repo.seven-systems.ch-snapshots</id>
+	      <url>http://repo.seven-systems.ch/repository/maven-snapshots</url>
+	    </repository>
+	</repositories>
 
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
 			<scope>test</scope>
 		</dependency>
 		
@@ -71,6 +70,8 @@
 		<dependency>
 			<groupId>org.hamcrest</groupId>
 			<artifactId>hamcrest-library</artifactId>
+			<version>${hamcrest.version}</version>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 
@@ -80,19 +81,18 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<layout>NONE</layout>
-					<skip>true</skip>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>build-info</goal>
-						</goals>
-					</execution>
-				</executions>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+			</plugin>
+			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+			</plugin>
+ 
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
 			</plugin>
 		</plugins>
 	</build>
