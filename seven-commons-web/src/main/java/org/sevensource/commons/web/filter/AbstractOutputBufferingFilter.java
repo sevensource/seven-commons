@@ -61,6 +61,7 @@ public abstract class AbstractOutputBufferingFilter implements Filter {
 
 		boolean alreadyFiltered = false;
 		String alreadyFilteredAttributeName = null;
+
 		if(filterOncePerRequest) {
 			alreadyFilteredAttributeName = getAlreadyFilteredAttributeName();
 			alreadyFiltered = httpRequest.getAttribute(alreadyFilteredAttributeName) != null;
