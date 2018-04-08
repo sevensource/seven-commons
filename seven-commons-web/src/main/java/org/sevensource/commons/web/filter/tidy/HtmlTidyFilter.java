@@ -43,21 +43,22 @@ public class HtmlTidyFilter extends AbstractContentChangingFilter {
 	}
 
 	private static TidyProcessorFormatter initFormatter(FilterConfig filterConfig) {
-		TidyProcessorFormatter formatter = TidyProcessorFormatter.NONE;
 
 		String formatterParameter = filterConfig.getInitParameter(FORMATTER_PARAMETER);
+
 		if(formatterParameter != null) {
 			formatterParameter = formatterParameter.trim();
-			if(formatterParameter.length() > 0) {
+			if(! formatterParameter.isEmpty()) {
 				try {
-					formatter = TidyProcessorFormatter.valueOf(formatterParameter);
+					return TidyProcessorFormatter.valueOf(formatterParameter);
 				} catch(IllegalArgumentException e) {
 					logger.error("No TidyProcessorFormatter with name {}", formatterParameter);
 					throw e;
 				}
 			}
 		}
-		return formatter;
+
+		return TidyProcessorFormatter.NONE;
 	}
 
 	private static Set<TidyProcessorOption> initOptions(FilterConfig filterConfig) {

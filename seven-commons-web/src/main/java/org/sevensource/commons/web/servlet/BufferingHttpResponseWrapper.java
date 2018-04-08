@@ -123,7 +123,7 @@ public class BufferingHttpResponseWrapper extends HttpServletResponseWrapper {
 			try {
 				servletOutputStream.close();
 			} catch(IOException e) {
-			// no-op - this should never happen
+				// no-op - this should never happen
 			}
 		}
 	}
