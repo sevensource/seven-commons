@@ -6,6 +6,7 @@ jobs:
 
     environment:
       MAVEN_OPTS: -Xmx3200m
+      CC_TEST_REPORTER_ID: ec8d64ba1cee48e83dfa9e6a987eb3e9868271901bd53c5420da2d1453d7059e
     
     steps:
       - checkout
@@ -14,19 +15,35 @@ jobs:
           - v1-dependencies-{{ checksum "pom.xml" }}
           - v1-dependencies-
 
-      - run: mvn -s .circleci/settings.xml dependency:go-offline
+      - run: mvn dependency:go-offline
 
       - save_cache:
           paths:
             - ~/.m2
           key: v1-dependencies-{{ checksum "pom.xml" }}
         
-      - run: mvn -s .circleci/settings.xml integration-test
+      - run: mvn integration-test
+      
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "develop" ]; then
+              cd src/main/java/
+              curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+              chmod +x ./cc-test-reporter
+              ./cc-test-reporter before-build
+              ./cc-test-reporter format-coverage --input-type jacoco -d ../../../target/site/jacoco-ut/jacoco.xml --add-prefix src/main/java
+              ./cc-test-reporter upload-coverage
+            fi
       
       - deploy:
           command: |
             if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              mvn -s .circleci/settings.xml -DskipTests deploy
+              mkdir cd
+              openssl aes-256-cbc -a -A -d -md sha256 -k "${GPG_SIGNING_SECRET}" -out cd/codesigning.asc <<<${GPG_SIGNING_DATA}
+              gpg --batch --fast-import cd/codesigning.asc
+              echo allow-loopback-pinentry >> ~/.gnupg/gpg-agent.conf
+              echo "pinentry-mode loopback" >> ~/.gnupg/gpg.conf
+              mvn -s .circleci/settings.xml -DskipTests package deploy
             fi
 
 workflows:

@@ -12,10 +12,10 @@
 	<description />
 
 	<parent>
-		<groupId>ch.sevensystems.parents</groupId>
-		<artifactId>sevensystems-build</artifactId>
+		<groupId>org.sevensource.parents</groupId>
+		<artifactId>sevensource-oss-build</artifactId>
 		<version>1.0</version>
-		<relativePath /> <!-- lookup parent from repository -->
+		<relativePath /> <!-- lookup from repo -->
 	</parent>
 
 	<properties>
