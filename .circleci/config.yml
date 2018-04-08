@@ -6,7 +6,7 @@ jobs:
 
     environment:
       MAVEN_OPTS: -Xmx3200m
-      CC_TEST_REPORTER_ID: ec8d64ba1cee48e83dfa9e6a987eb3e9868271901bd53c5420da2d1453d7059e
+      CC_TEST_REPORTER_ID: e8317441b8cfa34159d81e330cbb7c79f8ebe38c61795312b8fa67748bacb674
     
     steps:
       - checkout
