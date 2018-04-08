@@ -44,10 +44,10 @@ abstract class RelocatorSupport {
 			return;
 		}
 		
-		final List<Element> styles = getAllElements(body);
+		final List<Element> elements = getAllElements(body);
 		final Set<Integer> seen = new HashSet<>();
 		
-		for (Element startTag : styles) {
+		for (Element startTag : elements) {
 			
 			final RelocatorContext ctx = buildContext(startTag, seen);
 			

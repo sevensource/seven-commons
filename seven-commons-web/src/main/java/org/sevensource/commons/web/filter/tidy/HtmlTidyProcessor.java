@@ -8,8 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.sevensource.commons.web.util.FastByteArrayOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import net.htmlparser.jericho.MicrosoftConditionalCommentTagTypes;
 import net.htmlparser.jericho.OutputDocument;
@@ -44,8 +42,6 @@ import net.htmlparser.jericho.WhiteSpaceRespectingSourceFormatter;
  *
  */
 public class HtmlTidyProcessor {
-
-	private static final Logger logger = LoggerFactory.getLogger(HtmlTidyProcessor.class);
 
 
 	public enum TidyProcessorOption {
@@ -154,6 +150,7 @@ public class HtmlTidyProcessor {
 			return os.getInputStream();
 		} finally {
 			os.close();
+			writer.close();
 		}
 	}
 
