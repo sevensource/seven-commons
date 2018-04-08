@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.sevensource.commons.web.servlet.BufferingHttpResponseWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,15 +13,15 @@ import org.slf4j.LoggerFactory;
 public abstract class AbstractContentChangingFilter extends AbstractOutputBufferingFilter {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractContentChangingFilter.class);
-	
+
 	private static final Pattern HTML_ONLY_PATTERN = Pattern.compile(
-			"\\.(bmp|css|csv|doc|docx|eot|flv|gif|gz|ico|jpeg|jpg|js|mp[34]|pdf|png|rtf|svg|swf|tif{1,2}|ttf|txt|webp|woff|xls|xlsx|xml|zip)$",
+			"\\.(bmp|css|csv|doc|docx|eot|flv|gif|gz|ico|jpeg|jpg|js|mp[34]|pdf|png|rtf|svg|swf|tif{1,2}|ttf|txt|webp|woff|woff2|xls|xlsx|xml|zip)$",
 			Pattern.CASE_INSENSITIVE);
-	
+
 	private boolean filterHtmlOnly = true;
 	private boolean handleSuccessfulResponseOnly = true;
 	private int maxProcessingContentLength = 1024*1024;
-	
+
 
 
 	@Override
@@ -29,13 +30,9 @@ public abstract class AbstractContentChangingFilter extends AbstractOutputBuffer
 			final String uri = request.getRequestURI();
 			if (HTML_ONLY_PATTERN.matcher(uri).find()) {
 				return true;
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Proceeding with filter execution for filter {} and URI {}", getFilterName(), uri);
-				} 
 			}
 		}
-		
+
 		return false;
 	}
 
@@ -48,31 +45,31 @@ public abstract class AbstractContentChangingFilter extends AbstractOutputBuffer
 		} else if(maxProcessingContentLength > 0 && isResponseLarger(response, maxProcessingContentLength)) {
 			if (logger.isInfoEnabled()) {
 				logger.info("Skipping filter execution for filter {} and URI {} due to response size {}", getFilterName(), request.getRequestURI(), response.getBufferSize());
-			} 
+			}
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
-	
+
 	private boolean isSuccessfulResponse(HttpServletResponse response) {
 		final int status = response.getStatus();
-		
+
 		if(status == 0) {
 			if (logger.isWarnEnabled()) {
 				logger.warn("HTTP status is 0 - returning true on isSuccessfulResponse");
 			}
-			return true;			
-		} 
-		
+			return true;
+		}
+
 		return (status >= 200 && status < 300);
 	}
-	
+
 	private boolean isHtmlContentType(HttpServletResponse response) {
 		final String contentType = response.getContentType();
 		return (contentType != null && contentType.toLowerCase().startsWith("text/html"));
 	}
-	
+
 	private boolean isResponseLarger(HttpServletResponse response, int max) {
 		return response.getBufferSize() > max;
 	}

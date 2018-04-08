@@ -17,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
-import org.sevensource.commons.web.filter.BufferingHttpResponseWrapper;
+import org.sevensource.commons.web.servlet.BufferingHttpResponseWrapper;
 
 public class BufferingHttpResponseWrapperTest {
 	

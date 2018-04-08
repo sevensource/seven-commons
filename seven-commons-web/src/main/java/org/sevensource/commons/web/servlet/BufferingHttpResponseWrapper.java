@@ -1,4 +1,4 @@
-package org.sevensource.commons.web.filter;
+package org.sevensource.commons.web.servlet;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,7 +19,7 @@ public class BufferingHttpResponseWrapper extends HttpServletResponseWrapper {
 	private static final int INITIAL_BUFFER_SIZE = 1024;
 
 	private final FastByteArrayOutputStream buffer;
-	
+
 	private ServletOutputStream servletOutputStream;
 	private PrintWriter writer;
 
@@ -30,7 +30,6 @@ public class BufferingHttpResponseWrapper extends HttpServletResponseWrapper {
 
 	@Override
 	public ServletOutputStream getOutputStream() {
-
 		if (this.writer != null) {
 			throw new IllegalStateException("getWriter() has already been called on this response.");
 		}
@@ -60,8 +59,7 @@ public class BufferingHttpResponseWrapper extends HttpServletResponseWrapper {
 
 				@Override
 				public void setWriteListener(WriteListener listener) {
-					// no-op - we should never have a reason to call any of the
-					// listeners methods
+					// no-op - we should never have a reason to call any of the listeners methods
 				}
 			};
 		}
@@ -107,17 +105,17 @@ public class BufferingHttpResponseWrapper extends HttpServletResponseWrapper {
 		super.resetBuffer();
 		buffer.reset();
 	}
-	
+
 	public void writeBufferTo(OutputStream os) throws IOException {
 		close();
 		buffer.writeTo(os);
 	}
-	
+
 	public InputStream getBuffer() {
 		close();
 		return buffer.getInputStream();
 	}
-	
+
 	private void close() {
 		if (writer != null) {
 			writer.close();
@@ -125,7 +123,7 @@ public class BufferingHttpResponseWrapper extends HttpServletResponseWrapper {
 			try {
 				servletOutputStream.close();
 			} catch(IOException e) {
-			// no-op - this should never happen
+				// no-op - this should never happen
 			}
 		}
 	}

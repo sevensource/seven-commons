@@ -3,7 +3,7 @@ package org.sevensource.commons.web.filter.tidy;
 import java.util.List;
 import java.util.Set;
 
-import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOptions;
+import org.sevensource.commons.web.filter.tidy.HtmlTidyProcessor.TidyProcessorOption;
 
 import net.htmlparser.jericho.Element;
 import net.htmlparser.jericho.HTMLElementName;
@@ -13,9 +13,9 @@ class ScriptRelocator extends RelocatorSupport {
 	private final boolean relocate;
 	private final boolean removeDuplicates;
 	
-	ScriptRelocator(Set<TidyProcessorOptions> processorOptions) {
-		this.relocate = processorOptions.contains(TidyProcessorOptions.RELOCATE_SCRIPTS);
-		this.removeDuplicates = processorOptions.contains(TidyProcessorOptions.REMOVE_DUPLICATE_SCRIPTS);		
+	ScriptRelocator(Set<TidyProcessorOption> processorOptions) {
+		this.relocate = processorOptions.contains(TidyProcessorOption.RELOCATE_SCRIPTS);
+		this.removeDuplicates = processorOptions.contains(TidyProcessorOption.REMOVE_DUPLICATE_SCRIPTS);		
 	}
 
 	@Override

@@ -11,8 +11,8 @@
 
 	<parent>
 		<groupId>org.sevensource.commons</groupId>
-		<artifactId>seven-commons-aggregator</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<artifactId>seven-commons-build</artifactId>
+		<version>0.1.0</version>
 		<relativePath>../</relativePath>
 	</parent>
 
@@ -23,6 +23,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
+			<version>1.7.25</version>
 		</dependency>
 
 		<dependency>
@@ -35,6 +36,7 @@
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
 			<scope>provided</scope>
 		</dependency>
 
@@ -55,9 +57,6 @@
 
 	<build>
 		<plugins>
-
 		</plugins>
 	</build>
-
-
 </project>
