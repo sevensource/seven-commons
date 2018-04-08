@@ -18,6 +18,7 @@
 		<relativePath /> <!-- lookup from repo -->
 	</parent>
 
+
 	<properties>
 		<m2e.apt.activation>jdt_apt</m2e.apt.activation>
 		
