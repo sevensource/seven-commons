@@ -23,27 +23,32 @@ class ScriptMinifier {
 
 	void minify(Source source, OutputDocument outputDocument) {
 		final List<Element> elements = source.getAllElements(HTMLElementName.SCRIPT);
+
 		for(Element el : elements) {
 			final String src = el.getAttributeValue("src");
+
 			if (src == null || "".equals(src)) {
 				final String content = el.getContent().toString();
-				try {
-					final InputStream is = new ByteArrayInputStream(content.getBytes());
-					final ByteArrayOutputStream os = new ByteArrayOutputStream();
-					final JSMin jsMinAlt = new JSMin(is, os);
-					jsMinAlt.jsmin();
+				final String minified = minifyJs(content);
 
-					final String result = buildReplacement(el, new String(os.toByteArray()));
-
-
-
-					outputDocument.replace(el, result);
-
-				} catch(Exception e) {
-					logger.error("Cannot minify javascript", e);
-				}
-
+				final String result = buildReplacement(el, minified);
+				outputDocument.replace(el, result);
 			}
+		}
+	}
+
+	private String minifyJs(String content) {
+		try {
+			final InputStream is = new ByteArrayInputStream(content.getBytes());
+			final ByteArrayOutputStream os = new ByteArrayOutputStream();
+			final JSMin jsMinAlt = new JSMin(is, os);
+			jsMinAlt.jsmin();
+
+			final String result = new String(os.toByteArray());
+			return result;
+		} catch(Exception e) {
+			logger.error("Cannot minify javascript", e);
+			return content;
 		}
 	}
 

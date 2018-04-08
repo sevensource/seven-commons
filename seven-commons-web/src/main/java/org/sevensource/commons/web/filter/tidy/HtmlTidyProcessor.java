@@ -137,7 +137,6 @@ public class HtmlTidyProcessor {
 		final FastByteArrayOutputStream os = new FastByteArrayOutputStream(bufferSize);
 		final OutputStreamWriter writer = new OutputStreamWriter(os, StandardCharsets.UTF_8.name());
 
-
 		try {
 			if (processorFormatter == TidyProcessorFormatter.FORMAT) {
 				new WhiteSpaceRespectingSourceFormatter(source)

@@ -30,10 +30,6 @@ public abstract class AbstractContentChangingFilter extends AbstractOutputBuffer
 			final String uri = request.getRequestURI();
 			if (HTML_ONLY_PATTERN.matcher(uri).find()) {
 				return true;
-			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Proceeding with filter execution for filter {} and URI {}", getFilterName(), uri);
-				}
 			}
 		}
 
@@ -51,9 +47,9 @@ public abstract class AbstractContentChangingFilter extends AbstractOutputBuffer
 				logger.info("Skipping filter execution for filter {} and URI {} due to response size {}", getFilterName(), request.getRequestURI(), response.getBufferSize());
 			}
 			return true;
-		} else {
-			return false;
 		}
+
+		return false;
 	}
 
 	private boolean isSuccessfulResponse(HttpServletResponse response) {
